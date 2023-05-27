@@ -18,9 +18,19 @@ module "subnets" {
     env = var.env
 }
 
-resource "aws_internet_gateway" "gw" {
-  vpc_id = aws_vpc.main.id
 
+resource "aws_internet_gateway" "igw" {
+  vpc_id = aws_vpc.main.id
   tags = merge(var.tags, {Name = "${var.env}-igw"})
   
+}
+
+resource "aws_eip" "eip" {
+  count = length(var.subnets["public"].cidr_block)
+  instance = aws_instance.web.id
+  domain   = "vpc"
+}
+
+output "subnet_ids" {
+    value = module.subnets
 }
