@@ -28,9 +28,17 @@ resource "aws_internet_gateway" "igw" {
 resource "aws_eip" "eip" {
   count = length(var.subnets["public"].cidr_block)
   vpc = true
-  tags = merge(var.tags, {Name = "${var.env}-ngw"})
+  tags = merge(var.tags, {Name = "${var.env}-eip"})
 }
 
 output "subnet_ids" {
     value = module.subnets
 }
+
+resource "aws_nat_gateway" "ngw" {
+  count = length(var.subnets["public"].cidr_block)
+  allocation_id = aws_eip.eip[count.index].id
+  subnet_id     = module.subnets["public"].subnet_ids[count.index]
+
+  tags = merge(var.tags, {Name = "${var.env}-ngw"})
+  }
