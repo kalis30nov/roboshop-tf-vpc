@@ -56,3 +56,11 @@ resource "aws_route" "sub_ngw" {
   nat_gateway_id         = element(aws_nat_gateway.ngw.*.id, count.index)
   destination_cidr_block = "0.0.0.0/0"
 }
+
+output "ngw" {
+    value = aws_nat_gateway.ngw
+}
+
+output "subnet" {
+    value = module.subnets
+}
