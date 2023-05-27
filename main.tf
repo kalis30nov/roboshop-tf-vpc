@@ -27,8 +27,8 @@ resource "aws_internet_gateway" "igw" {
 
 resource "aws_eip" "eip" {
   count = length(var.subnets["public"].cidr_block)
-  instance = aws_instance.web.id
-  domain   = "vpc"
+  vpc = true
+  tags = merge(var.tags, {Name = "${var.env}-ngw"})
 }
 
 output "subnet_ids" {
