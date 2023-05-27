@@ -46,5 +46,5 @@ resource "aws_nat_gateway" "ngw" {
 resource "aws_route" "r" {
   count = length(module.subnets["public"].route_table_id)
   route_table_id              = module.subnets["public"].route_table_ids[count.index]
-  gateway_id = aws_internet_gateway.igw
+  gateway_id = aws_internet_gateway.igw.id
 }
