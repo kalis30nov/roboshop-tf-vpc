@@ -27,7 +27,6 @@ resource "aws_internet_gateway" "igw" {
 
 resource "aws_eip" "eip" {
   count = length(var.subnets["public"].cidr_block)
-  vpc = true
   tags = merge(var.tags, {Name = "${var.env}-eip"})
 }
 
@@ -58,3 +57,8 @@ resource "aws_route" "sub_ngw" {
 }
 
 
+resource "aws_vpc_peering_connection" "peer" {
+  peer_vpc_id   = var.default_vpc_id
+  vpc_id        = aws_vpc.main.id
+  auto_accept = true
+}
